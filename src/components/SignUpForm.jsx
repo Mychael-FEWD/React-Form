@@ -9,7 +9,8 @@ export default function SignUpForm({ onSetToken }) {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    if (username === 8) {
+    console.log(username.length);
+    if (username.length === 8) {
       try {
         const response = await fetch(
           "https://fsa-jwt-practice.herokuapp.com/signup",
@@ -76,7 +77,7 @@ export default function SignUpForm({ onSetToken }) {
       )}
       {successfulSignUp && (
         <h3>
-          {successfulSignUp} {username === 8 ? username : ""}
+          {successfulSignUp} {username.length === 8 ? username : ""}
         </h3>
       )}
     </div>
