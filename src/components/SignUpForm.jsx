@@ -9,28 +9,32 @@ export default function SignUpForm({ onSetToken }) {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    try {
-      const response = await fetch(
-        "https://fsa-jwt-practice.herokuapp.com/signup",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            username: `${username}`,
-            password: `${password}`,
-          }),
-        }
-      );
-      const result = await response.json();
-      onSetToken(result.token);
+    if (username === 8) {
+      try {
+        const response = await fetch(
+          "https://fsa-jwt-practice.herokuapp.com/signup",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              username: `${username}`,
+              password: `${password}`,
+            }),
+          }
+        );
+        const result = await response.json();
+        onSetToken(result.token);
 
-      if (result.success) setSuccessfulSignUp(result.message);
+        if (result.success) setSuccessfulSignUp(result.message);
 
-      console.log(result);
-    } catch (error) {
-      setError(error.message);
+        console.log(result);
+      } catch (error) {
+        setError(error.message);
+      }
+    } else {
+      setSuccessfulSignUp("Username must be 8 characters long to submit.");
     }
   }
 
@@ -44,6 +48,7 @@ export default function SignUpForm({ onSetToken }) {
           <input
             value={username}
             onChange={(e) => setUsername(e.target.value)}
+            required
           />
         </label>
 
@@ -52,6 +57,7 @@ export default function SignUpForm({ onSetToken }) {
           <input
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            required
           />
         </label>
 
@@ -70,7 +76,7 @@ export default function SignUpForm({ onSetToken }) {
       )}
       {successfulSignUp && (
         <h3>
-          {successfulSignUp} {username}
+          {successfulSignUp} {username === 8 ? username : ""}
         </h3>
       )}
     </div>
