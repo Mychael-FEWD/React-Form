@@ -7,13 +7,26 @@ export default function SignUpForm() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    console.log("Submit success!");
+    try {
+      const response = await fetch(
+        "https://fsa-jwt-practice.herokuapp.com/signup",
+        {
+          method: "POST",
+          body: JSON.stringify({ username }, { password }),
+        }
+      );
+      const result = await response.json();
+      console.log(result);
+    } catch (error) {
+      setError(error.message);
+    }
   }
 
   return (
     <>
       <h2>Sign Up!</h2>
-      <form onSubmit={handleSubmit}>
+      {error && <p>{error}</p>}
+      <form method="post" onSubmit={handleSubmit}>
         <label>
           Username:{" "}
           <input
