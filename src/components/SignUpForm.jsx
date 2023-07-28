@@ -1,9 +1,11 @@
 import { useState } from "react";
+import "../SignUpForm.css";
 
 export default function SignUpForm({ onSetToken }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
+  const [successfulSignUp, setSuccessfulSignUp] = useState(null);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -12,11 +14,20 @@ export default function SignUpForm({ onSetToken }) {
         "https://fsa-jwt-practice.herokuapp.com/signup",
         {
           method: "POST",
-          body: JSON.stringify({ username }, { password }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username: `${username}`,
+            password: `${password}`,
+          }),
         }
       );
       const result = await response.json();
       onSetToken(result.token);
+
+      if (result.success) setSuccessfulSignUp(result.message);
+
       console.log(result);
     } catch (error) {
       setError(error.message);
@@ -24,10 +35,10 @@ export default function SignUpForm({ onSetToken }) {
   }
 
   return (
-    <>
+    <div className="form section">
       <h2>Sign Up!</h2>
       {error && <p>{error}</p>}
-      <form method="post" onSubmit={handleSubmit}>
+      <form method="POST" onSubmit={handleSubmit}>
         <label>
           Username:{" "}
           <input
@@ -44,8 +55,24 @@ export default function SignUpForm({ onSetToken }) {
           />
         </label>
 
-        <button>Submit</button>
+        <button className="button">Submit</button>
       </form>
-    </>
+      {username && (
+        <p>
+          {username.length < 8
+            ? `Username must be 8 characters long. You have ${
+                8 - username.length
+              } characters remaining`
+            : username.length > 8
+            ? `Username is too long, remove ${username.length - 8} characters.`
+            : "Username is good to go."}
+        </p>
+      )}
+      {successfulSignUp && (
+        <h3>
+          {successfulSignUp} {username}
+        </h3>
+      )}
+    </div>
   );
 }

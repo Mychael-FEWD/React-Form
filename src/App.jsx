@@ -8,10 +8,10 @@ function App() {
   const [token, setToken] = useState(null);
 
   return (
-    <>
-      <SignUpForm onSetToken={setToken} />
+    <div className="app">
+      <SignUpForm onSetToken={setToken} className="sign-up-form" />
       <Authenticate token={token} />
-    </>
+    </div>
   );
 }
 
